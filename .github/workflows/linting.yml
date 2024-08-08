@@ -1,0 +1,33 @@
+# Original by Spatie licensed as MIT
+# https://github.com/spatie/package-skeleton-laravel/blob/main/.github/workflows/phpstan.yml
+
+name: Run Linter
+
+on:
+  push:
+    paths:
+      - '.github/workflows/linting.yml'
+      - '**.php'
+      - 'phpstan.neon.dist'
+
+  workflow_dispatch:
+
+jobs:
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v3
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan --error-format=github --memory-limit=512M
